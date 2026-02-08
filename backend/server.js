@@ -1,16 +1,19 @@
-{
-  "name": "synapse-backend",
-  "version": "1.0.0",
-  "main": "server.js",
-  "type": "module",
-  "scripts": {
-    "start": "node server.js",
-    "dev": "nodemon server.js"
-  },
-  "dependencies": {
-    "axios": "^1.6.0",
-    "cors": "^2.8.5",
-    "dotenv": "^16.4.0",
-    "express": "^4.19.0"
-  }
-}
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import chatRoutes from "./routes/chat.js";
+
+dotenv.config();
+
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.use("/api/chat", chatRoutes);
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`🚀 Synapse backend running on port ${PORT}`);
+});
