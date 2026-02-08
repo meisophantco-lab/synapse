@@ -1,6 +1,6 @@
 import express from "express";
 import { sendToGemini } from "../services/geminiService.js";
-import { updateContext, getContext } from "../utils/contextManager.js";
+import { getContext, updateContext } from "../utils/contextManager.js";
 
 const router = express.Router();
 
@@ -9,10 +9,11 @@ router.post("/", async (req, res) => {
     const { sessionId, message } = req.body;
 
     if (!message) {
-      return res.status(400).json({ error: "Message required" });
+      return res.status(400).json({ error: "Message is required" });
     }
 
     const context = getContext(sessionId);
+
     context.push({ role: "user", content: message });
 
     const reply = await sendToGemini(context);
@@ -22,9 +23,9 @@ router.post("/", async (req, res) => {
 
     res.json({ reply });
 
-  } catch (err) {
-    console.error("Chat error:", err);
-    res.status(500).json({ error: "AI processing failed" });
+  } catch (error) {
+    console.error("Chat error:", error);
+    res.status(500).json({ error: "AI failed to respond" });
   }
 });
 
